@@ -75,8 +75,11 @@ func (u *Scraper) start() {
 		e.ForEach("li", func(_ int, ch *colly.HTMLElement) {
 			if strings.Contains(ch.Text, "Gebot") {
 				// Anzahl der Gebote
-				product.Bids = ch.Text
-			} else if strings.Contains(ch.Text, "noch") {
+				product.Bids, err = strconv.Atoi(strings.Fields(ch.Text)[0])
+				if err != nil {
+					panic(err)
+				}
+			} else if strings.Contains(ch.Text, "Tage") || strings.Contains(ch.Text, "Std") || strings.Contains(ch.Text, "Min") {
 				// Zeit bis Ablauf
 				product.EndTime = ch.Text
 			} else if strings.Contains(ch.Text, "Abholung") {
@@ -87,7 +90,13 @@ func (u *Scraper) start() {
 		// Hole Ort der Auktion/Abholort
 		product.Location = e.ChildText("ul[aria-label='Auktionsdetails']>li:first-child")
 		// Hole den aktuellen Preis
-		product.Price = e.ChildText("p.text-right>span.font-weight-bold")
+		p1 := strings.Fields(e.ChildText("p.text-right>span.font-weight-bold"))
+		p2 := strings.Replace(p1[0], ".", "", -1)
+		p3 := strings.Replace(p2, ",", ".", -1)
+		product.Price, err = strconv.ParseFloat(p3, 64)
+		if err != nil {
+			panic(err)
+		}
 		products = append(products, product)
 	})
 	productsCollector.OnScraped(func(r *colly.Response) {
