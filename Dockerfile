@@ -9,6 +9,6 @@ RUN go build -o /go/bin/app/ -v ./...
 #final stage
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
-COPY --from=builder /go/bin/app/zoll_crawler /app/zoll_crawler
-ENTRYPOINT /app/zoll_crawler
-LABEL Name=zoll_crawler Version=0.0.1
+COPY --from=builder /go/bin/app/zoll-scraper /app/zoll-scraper
+ENTRYPOINT /app/zoll-scraper
+LABEL Name=zoll-scraper Version=0.0.1
