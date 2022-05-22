@@ -11,7 +11,6 @@ import (
 
 	"github.com/gocolly/colly"
 	"github.com/joho/godotenv"
-	"github.com/mileusna/crontab"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -46,11 +45,7 @@ func main() {
 	}
 	db.AutoMigrate(&Product{})
 	s := &Scraper{db: db}
-	ctab := crontab.New()
-	err = ctab.AddJob(os.Getenv("CRONJOB"), s.start)
-	if err != nil {
-		panic(err)
-	}
+	s.start()
 }
 
 func (u *Scraper) start() {
