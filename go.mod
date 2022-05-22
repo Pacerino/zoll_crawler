@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gocolly/colly v1.2.0
 	github.com/joho/godotenv v1.4.0
+	github.com/mileusna/crontab v1.2.0
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.5
 )
